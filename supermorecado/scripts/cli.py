@@ -6,13 +6,33 @@ import click
 import cligj
 import morecantile
 
-from supermorecado import burntiles, super_utils, uniontiles
+from supermorecado import burntiles, edge_finder, super_utils, uniontiles
 
 
 @click.group(help="Command line interface for the Supermorecado Python package.")
 def cli():
     """Supermorecado CLI."""
     pass
+
+
+@cli.command(
+    short_help="For a stream of [<x>, <y>, <z>] tiles, return only those tiles that are on the edge."
+)
+@click.argument("inputtiles", default="-", required=False)
+@click.option("--parsenames", is_flag=True)
+def edges(inputtiles, parsenames):
+    """
+    For a stream of [<x>, <y>, <z>] tiles, return only those tiles that are on the edge.
+    """
+    try:
+        inputtiles = click.open_file(inputtiles).readlines()
+    except IOError:
+        inputtiles = [inputtiles]
+
+    # parse the input stream into an array
+    tiles = edge_finder.findedges(inputtiles, parsenames)
+    for t in tiles:
+        click.echo(t.tolist())
 
 
 @cli.command(

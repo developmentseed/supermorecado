@@ -69,6 +69,13 @@ def tile_parser(tiles, parsenames=False):
     return tiles
 
 
+def get_idx():
+    """Get numpy identity matrix."""
+    tt = numpy.zeros((3, 3), dtype=bool)
+    tt[1, 1] = True
+    return numpy.dstack(numpy.where(~tt))[0] - 1
+
+
 def get_zoom(tiles):
     """Get Zoom."""
     t, d = tiles.shape

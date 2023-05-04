@@ -58,6 +58,7 @@ Options:
 
 Commands:
   burn   Burn a stream of GeoJSONs into a output stream of the tiles they intersect for a given zoom.
+  edges  For a stream of [<x>, <y>, <z>] tiles, return only those tiles that are on the edge.
   union  Returns the unioned shape of a stream of [<x>, <y>, <z>] tiles in GeoJSON.
 ```
 
@@ -83,6 +84,19 @@ cat tests/fixtures/france.geojson | supermorecado burn 6 --identifier WGS1984Qua
 
 ![](https://user-images.githubusercontent.com/10407788/236115182-441b1e23-3335-4392-9a72-4c98838c76de.jpg)
 
+### `supermorecado edges`
+
+```
+<[x, y, z] stream> | supermorecado edges | <[x, y, z] stream>
+```
+
+Outputs a stream of `[x, y, z]`s representing the edge tiles of an input stream of `[x, y, z]`s. Edge tile = any tile that is either directly adjacent to a tile that does not exist, or diagonal to an empty tile.
+
+```
+cat tests/fixtures/france.geojson | supermorecado burn 9 | supermorecado edges | morecantile shapes | fio collect | geojsonio
+```
+
+![](https://user-images.githubusercontent.com/10407788/236123127-cc99c887-de9d-4823-a935-bd31a99809a2.jpg)
 
 ### `supermorecado union`
 
