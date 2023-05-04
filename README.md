@@ -2,6 +2,7 @@
 
 
 <p align="center">
+  <img src="https://user-images.githubusercontent.com/10407788/236178256-62972e7a-ff16-4426-b189-73b1e6a29d5b.png">
   <em>Extend the functionality of morecantile with additional commands.</em>
 </p>
 <p align="center">
