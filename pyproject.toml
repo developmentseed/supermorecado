@@ -26,7 +26,6 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
-    "supermercado",
     "pytest",
     "pytest-cov",
 ]
@@ -76,7 +75,7 @@ exclude_lines = [
 [tool.isort]
 profile = "black"
 known_first_party = ["supermorecado"]
-known_third_party = ["rasterio", "pydantic", "pyproj", "morecantile"]
+known_third_party = ["rasterio", "morecantile"]
 default_section = "THIRDPARTY"
 
 [tool.mypy]
