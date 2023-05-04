@@ -5,9 +5,10 @@ import json
 import click
 import cligj
 import morecantile
-from supermercado import super_utils as sutils
 
-from supermorecado import burnTiles, findedges, unionTiles
+from supermorecado import burnTiles, findedges
+from supermorecado import super_utils as sutils
+from supermorecado import unionTiles
 
 
 @click.group(help="Command line interface for the Supermorecado Python package.")
