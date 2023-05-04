@@ -27,7 +27,8 @@ SOFTWARE.
 """
 
 import numpy
-from supermercado import super_utils as sutils
+
+from supermorecado import super_utils as sutils
 
 
 def findedges(tiles: numpy.array):
