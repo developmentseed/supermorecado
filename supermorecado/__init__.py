@@ -4,3 +4,7 @@ supermorecado is an adaptation of mapbox/supermorecado to work with other TMS gr
 """
 
 __version__ = "0.1.0"
+
+from .burntiles import burnTiles  # noqa
+from .edge_finder import findedges  # noqa
+from .uniontiles import unionTiles  # noqa

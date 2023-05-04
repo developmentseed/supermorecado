@@ -121,7 +121,47 @@ cat tests/fixtures/france.geojson | supermorecado burn 6 --identifier WGS1984Qua
 
 ![](https://user-images.githubusercontent.com/10407788/236115946-2dfabe05-e51d-473b-9957-26bbbe9e61bb.jpg)
 
-**Note**: We did not implement the `edges` CLI because `supermercado` method can be used (there is no TMS option to be used).
+## API migration
+
+`supermorecado` is really similar to `supermercado` (it reuse most of the code) but with the addition of multiple TMS support from morecantile.
+
+```python
+features = [
+    {
+        "geometry": {
+            "coordinates": [
+                [-127.97, 49.15],
+                [-101.95, -8.41],
+                [-43.24, -32.84],
+                [37.62, -25.17],
+                [71.72, -7.01],
+                [107.23, 48.69],
+            ],
+            "type": "LineString",
+        },
+        "properties": {},
+        "type": "Feature",
+    },
+]
+
+# supermercado
+from supermercado import burntiles, uniontiles
+
+tiles = burntiles.burn(features)
+u_tiles = uniontiles.union(features)
+
+# supermorecado
+import morecantile
+from supermorecado import burnTiles, unionTiles
+
+tms = morecantile.tms.get("WebMercatorQuad")
+
+burntiles = burnTiles(tms=tms)
+tiles = burntiles.burn(features)
+
+uniontiles = unionTiles(tms=tms)
+u_tiles = uniontiles.burn(features)
+```
 
 ## Changes
 
