@@ -45,6 +45,70 @@ $ python -m pip install -U pip
 $ python -m pip install git+https://github.com/developmentseed/supermorecado.git
 ```
 
+## Usage
+
+```
+supermorecado --help
+Usage: supermorecado [OPTIONS] COMMAND [ARGS]...
+
+  Command line interface for the Supermorecado Python package.
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  burn   Burn a stream of GeoJSONs into a output stream of the tiles they intersect for a given zoom.
+  union  Returns the unioned shape of a stream of [<x>, <y>, <z>] tiles in GeoJSON.
+```
+
+### `supermorecado burn`
+
+```
+<{geojson} stream> | supermorecado burn <zoom> --identifier {tms Identifier} | <[x, y, z] stream>
+```
+
+Takes an input stream of GeoJSON and returns a stream of intersecting `[x, y, z]`s for a given zoom.
+
+Using default TMS (`WebMercatorQuad`)
+```
+cat tests/fixtures/france.geojson | supermorecado burn 9 | morecantile shapes | fio collect | geojsonio
+```
+
+![](https://user-images.githubusercontent.com/10407788/236114524-c0a3543f-dfa3-4fd3-af2f-27d60ab897e1.jpg)
+
+Using other TMS (e.g `WGS1984Quad`)
+```
+cat tests/fixtures/france.geojson | supermorecado burn 6 --identifier WGS1984Quad | morecantile shapes --identifier WGS1984Quad | fio collect | geojsonio
+```
+
+![](https://user-images.githubusercontent.com/10407788/236115182-441b1e23-3335-4392-9a72-4c98838c76de.jpg)
+
+
+### `supermorecado union`
+
+```
+<[x, y, z] stream> | supermorecado union --identifier {tms Identifier} | <{geojson} stream>
+```
+
+Outputs a stream of unioned GeoJSON from an input stream of `[x, y, z]`s. Like `morecantile shapes` but as an overall footprint instead of individual shapes for each tile.
+
+Using default TMS (`WebMercatorQuad`)
+```
+cat tests/fixtures/france.geojson | supermorecado burn 9 | supermorecado union | fio collect | geojsonio
+```
+
+![](https://user-images.githubusercontent.com/10407788/236115745-9c2f4fa3-e2ea-47d5-a5f5-c77f5308f4a3.jpg)
+
+Using other TMS (e.g `WGS1984Quad`)
+
+```
+cat tests/fixtures/france.geojson | supermorecado burn 6 --identifier WGS1984Quad |  supermorecado union --identifier WGS1984Quad | fio collect | geojsonio
+```
+
+![](https://user-images.githubusercontent.com/10407788/236115946-2dfabe05-e51d-473b-9957-26bbbe9e61bb.jpg)
+
+**Note**: We did not implement the `edges` CLI because `supermercado` method can be used (there is no TMS option to be used).
+
 ## Changes
 
 See [CHANGES.md](https://github.com/developmentseed/supermorecado/blob/main/CHANGES.md).

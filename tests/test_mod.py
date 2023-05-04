@@ -24,13 +24,12 @@ SOFTWARE.
 
 """
 
+import morecantile
 import numpy
 import pytest
 
 from supermorecado import super_utils as sutils
 from supermorecado.burntiles import burnTiles
-
-find_extrema = burnTiles().find_extrema
 
 
 def test_get_range():
@@ -247,14 +246,29 @@ def test_find_extrema():
             "type": "Feature",
         },
     ]
-    bounds = find_extrema(features)
+    tms = morecantile.tms.get("WebMercatorQuad")
+    burntiles = burnTiles(tms=tms)
 
+    bounds = burntiles.find_extrema(features)
     assert bounds == (
         -127.9699999999,
         -32.8399999999,
         107.2299999999,
         61.439999999899996,
     )
+    assert len(burntiles.burn(features, 5)) == 51
+
+    tms = morecantile.tms.get("WGS1984Quad")
+    burntiles = burnTiles(tms=tms)
+    bounds = burntiles.find_extrema(features)
+    # bounds should be the same in other TMS
+    assert bounds == (
+        -127.9699999999,
+        -32.8399999999,
+        107.2299999999,
+        61.439999999899996,
+    )
+    assert len(burntiles.burn(features, 5)) == 94
 
 
 # def test_find_extrema_cross_antimeridian():
