@@ -30,14 +30,11 @@ import numpy
 from supermercado import super_utils as sutils
 
 
-def findedges(inputtiles, parsenames):
+def findedges(tiles: numpy.array):
     """Find edges."""
-    tiles = sutils.tile_parser(inputtiles, parsenames)
-
     xmin, xmax, ymin, ymax = sutils.get_range(tiles)
 
     zoom = sutils.get_zoom(tiles)
-    # zoom = inputtiles[0, -1]
 
     # make an array of shape (xrange + 3, yrange + 3)
     burn = sutils.burnXYZs(tiles, xmin, xmax, ymin, ymax)

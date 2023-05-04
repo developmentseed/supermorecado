@@ -126,7 +126,9 @@ class burnTiles:
         else:
             raise Exception(f"Invalid geometry type {geom['type']}")
 
-    def tile_extrema(self, bounds, zoom):
+    def tile_extrema(
+        self, bounds: Tuple[float, float, float, float], zoom: int
+    ) -> Dict:
         """Tiles min/max at the given zoom for bounds."""
         minimumTile = self.tms.tile(bounds[0], bounds[3], zoom)
         maximumTile = self.tms.tile(bounds[2], bounds[1], zoom)
@@ -152,7 +154,10 @@ class burnTiles:
         return Affine(xcell, 0, ulx, 0, -ycell, uly)
 
     def burn(
-        self, polys: Sequence[Dict[Any, Any]], zoom: int, truncate: bool = True
+        self,
+        polys: Sequence[Dict[Any, Any]],
+        zoom: int,
+        truncate: bool = True,
     ) -> numpy.ndarray:
         """Burn geometries to Tiles."""
         bounds = self.find_extrema(polys, truncate=truncate)

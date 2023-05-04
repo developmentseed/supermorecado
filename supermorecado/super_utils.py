@@ -27,10 +27,12 @@ SOFTWARE.
 """
 import json
 import re
+from typing import Any, Dict, Generator, Sequence, Tuple
 
 import attr
 import morecantile
 import numpy
+import numpy.typing as npt
 
 
 def parseString(tilestring, matcher):
@@ -40,12 +42,14 @@ def parseString(tilestring, matcher):
     return tile
 
 
-def get_range(xyz):
+def get_range(xyz: npt.NDArray) -> Tuple[int, int, int, int]:
     """Get tiles extrema."""
     return xyz[:, 0].min(), xyz[:, 0].max(), xyz[:, 1].min(), xyz[:, 1].max()
 
 
-def burnXYZs(tiles, xmin, xmax, ymin, ymax, pad=1):
+def burnXYZs(
+    tiles: npt.NDArray, xmin: float, xmax: float, ymin: float, ymax: float, pad: int = 1
+):
     """Burn XYZ tiles."""
     # make an array of shape (xrange + 3, yrange + 3)
     burn = numpy.zeros(
@@ -58,7 +62,7 @@ def burnXYZs(tiles, xmin, xmax, ymin, ymax, pad=1):
     return burn
 
 
-def tile_parser(tiles, parsenames=False):
+def tile_parser(tiles: npt.ArrayLike, parsenames: bool = False) -> numpy.ndarray:
     """Parse Tile."""
     if parsenames:
         tMatch = re.compile(r"[\d]+-[\d]+-[\d]+")
@@ -69,14 +73,14 @@ def tile_parser(tiles, parsenames=False):
     return tiles
 
 
-def get_idx():
+def get_idx() -> numpy.ndarray:
     """Get numpy identity matrix."""
     tt = numpy.zeros((3, 3), dtype=bool)
     tt[1, 1] = True
     return numpy.dstack(numpy.where(~tt))[0] - 1
 
 
-def get_zoom(tiles):
+def get_zoom(tiles: npt.NDArray) -> int:
     """Get Zoom."""
     t, d = tiles.shape
     if t < 1 or d != 3:
@@ -88,28 +92,35 @@ def get_zoom(tiles):
     return tiles[0, 2]
 
 
-def filter_features(features):  # noqa: C901
+def filter_features(  # noqa: C901
+    features: Sequence[Dict[Any, Any]]
+) -> Generator[Dict, None, None]:
     """Filter feature."""
     for f in features:
         if "geometry" in f and "type" in f["geometry"]:
             if f["geometry"]["type"] == "Polygon":
                 yield f
+
             elif f["geometry"]["type"] == "Point":
                 yield f
+
             elif f["geometry"]["type"] == "LineString":
                 yield f
+
             elif f["geometry"]["type"] == "MultiPolygon":
                 for part in f["geometry"]["coordinates"]:
                     yield {
                         "type": "Feature",
                         "geometry": {"type": "Polygon", "coordinates": part},
                     }
+
             elif f["geometry"]["type"] == "MultiPoint":
                 for part in f["geometry"]["coordinates"]:
                     yield {
                         "type": "Feature",
                         "geometry": {"type": "Point", "coordinates": part},
                     }
+
             elif f["geometry"]["type"] == "MultiLineString":
                 for part in f["geometry"]["coordinates"]:
                     yield {
@@ -124,7 +135,9 @@ class Unprojecter:
 
     tms: morecantile.TileMatrixSet = attr.ib()
 
-    def xy_to_lng_lat(self, coordinates):
+    def xy_to_lng_lat(
+        self, coordinates: Sequence[Tuple[float, float]]
+    ) -> numpy.ndarray:
         """Convert coordinates."""
         for c in coordinates:
             tc = numpy.array(c)
@@ -132,7 +145,7 @@ class Unprojecter:
                 [*self.tms._to_geographic.transform(tc[:, 0], tc[:, 1])]
             )[0].tolist()
 
-    def unproject(self, feature):
+    def unproject(self, feature: Dict[Any, Any]) -> Dict[Any, Any]:
         """Apply reprojection."""
         feature["coordinates"] = list(self.xy_to_lng_lat(feature["coordinates"]))
         return feature

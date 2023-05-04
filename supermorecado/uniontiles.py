@@ -29,6 +29,7 @@ SOFTWARE.
 import attr
 import morecantile
 import numpy
+import numpy.typing as npt
 from affine import Affine
 from rasterio import features
 
@@ -43,10 +44,8 @@ class unionTiles:
 
     tms: morecantile.TileMatrixSet = attr.ib(default=WEB_MERCATOR_TMS)
 
-    def union(self, inputtiles, parsenames):
+    def union(self, tiles: npt.NDArray):
         """Union of tiles."""
-        tiles = sutils.tile_parser(inputtiles, parsenames)
-
         xmin, xmax, ymin, ymax = sutils.get_range(tiles)
 
         zoom = sutils.get_zoom(tiles)

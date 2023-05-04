@@ -5,8 +5,9 @@ import json
 import click
 import cligj
 import morecantile
+from supermercado import super_utils as sutils
 
-from supermorecado import burntiles, edge_finder, super_utils, uniontiles
+from supermorecado import burnTiles, findedges, unionTiles
 
 
 @click.group(help="Command line interface for the Supermorecado Python package.")
@@ -30,8 +31,8 @@ def edges(inputtiles, parsenames):
         inputtiles = [inputtiles]
 
     # parse the input stream into an array
-    tiles = edge_finder.findedges(inputtiles, parsenames)
-    for t in tiles:
+    tiles = sutils.tile_parser(inputtiles, parsenames)
+    for t in findedges(tiles):
         click.echo(t.tolist())
 
 
@@ -50,15 +51,15 @@ def union(inputtiles, parsenames, identifier):
     """
     Returns the unioned shape of a stream of [<x>, <y>, <z>] tiles in GeoJSON.
     """
-    tms = morecantile.tms.get(identifier)
-
     try:
         inputtiles = click.open_file(inputtiles).readlines()
     except IOError:
         inputtiles = [inputtiles]
 
-    unioned = uniontiles.unionTiles(tms).union(inputtiles, parsenames)
-    for u in unioned:
+    tiles = sutils.tile_parser(inputtiles, parsenames)
+
+    uniontiles = unionTiles(tms=morecantile.tms.get(identifier))
+    for u in uniontiles.union(tiles):
         click.echo(json.dumps(u))
 
 
@@ -78,10 +79,8 @@ def burn(features, sequence, zoom, identifier):
     """
     Burn a stream of GeoJSONs into a output stream of the tiles they intersect for a given zoom.
     """
-    tms = morecantile.tms.get(identifier)
+    features = list(sutils.filter_features(features))
 
-    features = list(super_utils.filter_features(features))
-
-    tiles = burntiles.burnTiles(tms).burn(features, zoom)
-    for t in tiles:
+    burntiles = burnTiles(tms=morecantile.tms.get(identifier))
+    for t in burntiles.burn(features, zoom):
         click.echo(t.tolist())
