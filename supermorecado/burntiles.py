@@ -130,12 +130,15 @@ class burnTiles:
         self, bounds: Tuple[float, float, float, float], zoom: int
     ) -> Dict:
         """Tiles min/max at the given zoom for bounds."""
-        minimumTile = self.tms.tile(bounds[0], bounds[3], zoom)
-        maximumTile = self.tms.tile(bounds[2], bounds[1], zoom)
+        ulTile = self.tms.tile(bounds[0], bounds[3], zoom)
+        lrTile = self.tms.tile(bounds[2], bounds[1], zoom)
+
+        minx, maxx = (min(ulTile.x, lrTile.x), max(ulTile.x, lrTile.x))
+        miny, maxy = (min(ulTile.y, lrTile.y), max(ulTile.y, lrTile.y))
 
         return {
-            "x": {"min": minimumTile.x, "max": maximumTile.x + 1},
-            "y": {"min": minimumTile.y, "max": maximumTile.y + 1},
+            "x": {"min": minx, "max": maxx + 1},
+            "y": {"min": miny, "max": maxy + 1},
         }
 
     def make_transform(self, tilerange: Dict, zoom: int) -> Affine:
