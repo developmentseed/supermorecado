@@ -27,7 +27,7 @@ SOFTWARE.
 """
 import json
 import re
-from typing import Any, Dict, Generator, Sequence, Tuple
+from typing import Any, Dict, Generator, List, Sequence, Tuple
 
 import attr
 import morecantile
@@ -35,7 +35,7 @@ import numpy
 import numpy.typing as npt
 
 
-def parseString(tilestring, matcher):
+def parseString(tilestring, matcher) -> List[int]:
     """Parse Tile."""
     tile = [int(r) for r in matcher.match(tilestring).group().split("-")]
     tile.append(tile.pop(0))

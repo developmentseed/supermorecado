@@ -6,7 +6,7 @@ import click
 import cligj
 import morecantile
 
-from supermorecado import burnTiles, findedges
+from supermorecado import burnTiles, densityTiles, findedges
 from supermorecado import super_utils as sutils
 from supermorecado import unionTiles
 
@@ -105,3 +105,38 @@ def burn(features, sequence, zoom, identifier, tms):
     burntiles = burnTiles(tms=tilematrixset)
     for t in burntiles.burn(features, zoom):
         click.echo(t.tolist())
+
+
+@cli.command(short_help="Creates a vector `heatmap` of tile densities.")
+@click.argument("inputtiles", default="-", required=False)
+@click.option("--parsenames", is_flag=True)
+@click.option(
+    "--identifier",
+    type=click.Choice(morecantile.tms.list()),
+    default="WebMercatorQuad",
+    help="TileMatrixSet identifier.",
+)
+@click.option(
+    "--tms",
+    help="Path to TileMatrixSet JSON file.",
+    type=click.Path(),
+)
+def heatmap(inputtiles, parsenames, identifier, tms):
+    """
+    Creates a vector `heatmap` of tile densities.
+    """
+    try:
+        inputtiles = click.open_file(inputtiles).readlines()
+    except IOError:
+        inputtiles = [inputtiles]
+
+    tiles = sutils.tile_parser(inputtiles, parsenames)
+
+    tilematrixset = morecantile.tms.get(identifier)
+    if tms:
+        with open(tms, "r") as f:
+            tilematrixset = morecantile.TileMatrixSet(**json.load(f))
+
+    tiledensity = densityTiles(tms=tilematrixset)
+    for u in tiledensity.heatmap(tiles):
+        click.echo(json.dumps(u))

@@ -74,6 +74,22 @@ def test_burn_cli():
     assert result.output == expected
 
 
+def test_heatmap_cli():
+    filename = os.path.join(os.path.dirname(__file__), "fixtures/heatmap.txt")
+    expectedFilename = os.path.join(os.path.dirname(__file__), "expected/heatmap.txt")
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ["heatmap", filename])
+    assert result.exit_code == 0
+
+    with open(expectedFilename) as ofile:
+        expected = ofile.readlines()
+        expected_counts = [json.loads(f)["properties"]["n"] for f in expected]
+
+    count = [json.loads(f)["properties"]["n"] for f in result.output.splitlines()]
+    assert count == expected_counts
+
+
 def test_burn_tile_center_point_roundtrip():
     tile = [83885, 202615, 19]
     w, s, e, n = mercantile.bounds(*tile)
