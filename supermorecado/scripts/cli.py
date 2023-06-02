@@ -48,7 +48,12 @@ def edges(inputtiles, parsenames):
     default="WebMercatorQuad",
     help="TileMatrixSet identifier.",
 )
-def union(inputtiles, parsenames, identifier):
+@click.option(
+    "--tms",
+    help="Path to TileMatrixSet JSON file.",
+    type=click.Path(),
+)
+def union(inputtiles, parsenames, identifier, tms):
     """
     Returns the unioned shape of a stream of [<x>, <y>, <z>] tiles in GeoJSON.
     """
@@ -59,7 +64,12 @@ def union(inputtiles, parsenames, identifier):
 
     tiles = sutils.tile_parser(inputtiles, parsenames)
 
-    uniontiles = unionTiles(tms=morecantile.tms.get(identifier))
+    tilematrixset = morecantile.tms.get(identifier)
+    if tms:
+        with open(tms, "r") as f:
+            tilematrixset = morecantile.TileMatrixSet(**json.load(f))
+
+    uniontiles = unionTiles(tms=tilematrixset)
     for u in uniontiles.union(tiles):
         click.echo(json.dumps(u))
 
@@ -76,12 +86,22 @@ def union(inputtiles, parsenames, identifier):
     default="WebMercatorQuad",
     help="TileMatrixSet identifier.",
 )
-def burn(features, sequence, zoom, identifier):
+@click.option(
+    "--tms",
+    help="Path to TileMatrixSet JSON file.",
+    type=click.Path(),
+)
+def burn(features, sequence, zoom, identifier, tms):
     """
     Burn a stream of GeoJSONs into a output stream of the tiles they intersect for a given zoom.
     """
     features = list(sutils.filter_features(features))
 
-    burntiles = burnTiles(tms=morecantile.tms.get(identifier))
+    tilematrixset = morecantile.tms.get(identifier)
+    if tms:
+        with open(tms, "r") as f:
+            tilematrixset = morecantile.TileMatrixSet(**json.load(f))
+
+    burntiles = burnTiles(tms=tilematrixset)
     for t in burntiles.burn(features, zoom):
         click.echo(t.tolist())
