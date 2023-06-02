@@ -3,7 +3,7 @@ supermorecado is an adaptation of mapbox/supermorecado to work with other TMS gr
 
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from .burntiles import burnTiles  # noqa
 from .densitytiles import densityTiles  # noqa
