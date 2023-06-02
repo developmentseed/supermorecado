@@ -26,6 +26,8 @@ SOFTWARE.
 
 """
 
+from typing import Dict, List
+
 import attr
 import morecantile
 import numpy
@@ -44,13 +46,12 @@ class unionTiles:
 
     tms: morecantile.TileMatrixSet = attr.ib(default=WEB_MERCATOR_TMS)
 
-    def union(self, tiles: npt.NDArray):
+    def union(self, tiles: npt.NDArray) -> List[Dict]:
         """Union of tiles."""
         xmin, xmax, ymin, ymax = sutils.get_range(tiles)
 
         zoom = sutils.get_zoom(tiles)
 
-        # make an array of shape (xrange + 3, yrange + 3)
         burn = sutils.burnXYZs(tiles, xmin, xmax, ymin, ymax, 0)
 
         nw = self.tms.xy(*self.tms.ul(xmin, ymin, zoom))

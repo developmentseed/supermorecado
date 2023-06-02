@@ -58,9 +58,10 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  burn   Burn a stream of GeoJSONs into a output stream of the tiles they intersect for a given zoom.
-  edges  For a stream of [<x>, <y>, <z>] tiles, return only those tiles that are on the edge.
-  union  Returns the unioned shape of a stream of [<x>, <y>, <z>] tiles in GeoJSON.
+  burn     Burn a stream of GeoJSONs into a output stream of the tiles they intersect for a given zoom.
+  edges    For a stream of [<x>, <y>, <z>] tiles, return only those tiles that are on the edge.
+  heatmap  Creates a vector `heatmap` of tile densities.
+  union    Returns the unioned shape of a stream of [<x>, <y>, <z>] tiles in GeoJSON.
 ```
 
 ### `supermorecado burn`
@@ -121,6 +122,35 @@ cat tests/fixtures/france.geojson | supermorecado burn 6 --identifier WGS1984Qua
 ```
 
 ![](https://user-images.githubusercontent.com/10407788/236115946-2dfabe05-e51d-473b-9957-26bbbe9e61bb.jpg)
+
+
+### `supermorecado heatmap`
+
+```
+<[x, y, z] stream> | supermorecado heatmap --identifier {tms Identifier} | <{geojson} stream>
+```
+Outputs a stream of heatmap GeoJSON from an input stream of `[x, y, z]`s.
+
+Using default TMS (`WebMercatorQuad`)
+```
+cat tests/fixtures/heatmap.txt| supermorecado heatmap | fio collect | geojsonio
+```
+
+![](https://github.com/developmentseed/supermorecado/assets/10407788/fec78304-12e8-47de-bca3-af58f04e8824)
+
+Using other TMS (e.g `WGS1984Quad`)
+
+```
+# create a list of tiles
+cat tests/fixtures/france.geojson | supermorecado burn 6 --identifier WGS1984Quad > france_wgs84_z6.txt
+# randomly append more tiles
+for run in {1..10}; do cat france_wgs84_z6.txt | sort -R | head -n 2 >> france_wgs84_z6.txt; done
+
+cat france_wgs84_z6.txt |  supermorecado heatmap --identifier WGS1984Quad | fio collect | geojsonio
+```
+
+![](https://github.com/developmentseed/supermorecado/assets/10407788/dec3dbdb-6030-4dd8-9efc-5c8d4b7c83d3)
+
 
 ## API migration
 

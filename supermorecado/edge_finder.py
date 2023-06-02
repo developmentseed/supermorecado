@@ -27,11 +27,12 @@ SOFTWARE.
 """
 
 import numpy
+import numpy.typing as npt
 
 from supermorecado import super_utils as sutils
 
 
-def findedges(tiles: numpy.array):
+def findedges(tiles: npt.NDArray):
     """Find edges."""
     xmin, xmax, ymin, ymax = sutils.get_range(tiles)
 
