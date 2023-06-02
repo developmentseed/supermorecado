@@ -1,6 +1,6 @@
 # Project Information
 site_name: 'supermorecado'
-site_description: 'Construct and use map tile grids (a.k.a TileMatrixSet / TMS).'
+site_description: 'Extend the functionality of morecantile with additional commands.'
 
 docs_dir: 'src'
 site_dir: 'build'
