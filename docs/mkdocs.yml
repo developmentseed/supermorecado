@@ -1,15 +1,15 @@
 # Project Information
-site_name: 'morecantile'
+site_name: 'supermorecado'
 site_description: 'Construct and use map tile grids (a.k.a TileMatrixSet / TMS).'
 
 docs_dir: 'src'
 site_dir: 'build'
 
 # Repository
-repo_name: 'developmentseed/morecantile'
-repo_url: 'https://github.com/developmentseed/morecantile'
+repo_name: 'developmentseed/supermorecado'
+repo_url: 'https://github.com/developmentseed/supermorecado'
 edit_uri: 'blob/main/src/'
-site_url: 'https://developmentseed.org/morecantile/'
+site_url: 'https://developmentseed.org/supermorecado/'
 
 # Social links
 extra:
@@ -22,8 +22,6 @@ extra:
 # Layout
 nav:
   - Home: 'index.md'
-  - Usage: 'usage.md'
-  - CLI: 'cli.md'
   - Development - Contributing: 'contributing.md'
   - Release: 'release-notes.md'
 
