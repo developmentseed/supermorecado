@@ -91,13 +91,13 @@ class burnTiles:
                 max(max_y) - epsilon,
             )
 
-    def project_geom(self, geom: Dict) -> Dict:
+    def project_geom(self, geom: Dict, truncate: bool = False) -> Dict:
         """reproject geom in TMS CRS."""
         if geom["type"] == "Polygon":
             return {
                 "type": geom["type"],
                 "coordinates": [
-                    [self.tms.xy(*coords) for coords in part]
+                    [self.tms.xy(*coords, truncate=truncate) for coords in part]
                     for part in geom["coordinates"]
                 ],
             }
@@ -105,20 +105,26 @@ class burnTiles:
         elif geom["type"] == "LineString":
             return {
                 "type": geom["type"],
-                "coordinates": [self.tms.xy(*coords) for coords in geom["coordinates"]],
+                "coordinates": [
+                    self.tms.xy(*coords, truncate=truncate)
+                    for coords in geom["coordinates"]
+                ],
             }
 
         elif geom["type"] == "Point":
             return {
                 "type": geom["type"],
-                "coordinates": self.tms.xy(*geom["coordinates"]),
+                "coordinates": self.tms.xy(*geom["coordinates"], truncate=truncate),
             }
 
         elif geom["type"] == "MultiPolygon":
             return {
                 "type": geom["type"],
                 "coordinates": [
-                    [[self.tms.xy(*coords) for coords in part] for part in poly]
+                    [
+                        [self.tms.xy(*coords, truncate=truncate) for coords in part]
+                        for part in poly
+                    ]
                     for poly in geom["coordinates"]
                 ],
             }
@@ -169,7 +175,10 @@ class burnTiles:
         afftrans = self.make_transform(tilerange, zoom)
 
         burn = features.rasterize(
-            ((self.project_geom(geom["geometry"]), 255) for geom in polys),
+            (
+                (self.project_geom(geom["geometry"], truncate=truncate), 255)
+                for geom in polys
+            ),
             out_shape=(
                 (
                     tilerange["y"]["max"] - tilerange["y"]["min"],
