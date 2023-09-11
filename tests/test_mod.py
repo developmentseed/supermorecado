@@ -359,3 +359,31 @@ def test_find_extrema():
 #         190.0099999999,
 #         85.0511287798066,
 #     )
+
+
+def test_truncate():
+    """Make sure the features are correctly truncated"""
+    features = [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        (-180.0, -50.00000149011612),
+                        (-180.0, 50.0),
+                        (180.00000536441803, 50.0),
+                        (180.00000536441803, -50.00000149011612),
+                        (-180.0, -50.00000149011612),
+                    ]
+                ],
+            },
+        }
+    ]
+    tms = morecantile.tms.get("WebMercatorQuad")
+
+    burntiles = burnTiles(tms=tms)
+    assert len(burntiles.burn(features, 1, truncate=True)) > 0
+
+    burntiles = burnTiles(tms=tms)
+    assert len(burntiles.burn(features, 1, truncate=False)) == 0
