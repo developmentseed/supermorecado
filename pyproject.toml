@@ -90,7 +90,7 @@ ignore = [
 "**/tests/*" = ["D103"]
 
 [tool.bumpversion]
-current_version = "0.1.2"
+current_version = "0.2.0"
 search = "{current_version}"
 replace = "{new_version}"
 regex = false
