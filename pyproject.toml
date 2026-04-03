@@ -2,7 +2,7 @@
 name = "supermorecado"
 description = "Extend the functionality of morecantile with additional commands."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.11"
 license = {file = "LICENSE"}
 authors = [
     {name = "Vincent Sarago", email = "vincent@developmentseed.com"},
@@ -12,10 +12,10 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: BSD License",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: GIS",
 ]
 dynamic = ["version"]
@@ -24,13 +24,14 @@ dependencies = [
     "rasterio",
 ]
 
-[project.optional-dependencies]
-test = [
+[dependency-groups]
+dev = [
     "pytest",
     "pytest-cov",
-]
-dev = [
     "pre-commit",
+]
+deploy = [
+    "hatch",
 ]
 docs = [
     "mkdocs",
@@ -46,31 +47,17 @@ Documentation = "https://developmentseed.org/supermorecado/"
 supermorecado = "supermorecado.scripts.cli:cli"
 
 [build-system]
-requires = ["flit>=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["hatchling", "hatch-fancy-pypi-readme>=22.5.0"]
+build-backend = "hatchling.build"
 
-[tool.flit.module]
-name = "supermorecado"
+[tool.hatch.version]
+path = "supermorecado/__init__.py"
 
-[tool.flit.sdist]
-exclude = [
-    "tests/",
-    "docs/",
-    ".github/",
-    "CHANGES.md",
-    "CONTRIBUTING.md",
-]
+[tool.hatch.build.targets.sdist]
+only-include = ["supermorecado/"]
 
-[tool.coverage.run]
-branch = true
-parallel = true
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
+[tool.hatch.build.targets.wheel]
+only-include = ["supermorecado/"]
 
 [tool.isort]
 profile = "black"
@@ -82,6 +69,9 @@ default_section = "THIRDPARTY"
 no_strict_optional = true
 
 [tool.ruff]
+line-length = 90
+
+[tool.ruff.lint]
 select = [
     "D1",  # pydocstyle errors
     "E",  # pycodestyle errors
@@ -96,6 +86,6 @@ ignore = [
     "B905",  # ignore zip() without an explicit strict= parameter, only support with python >3.10
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.lint.ruff.per-file-ignores]
 "tests/test_cli.py" = ["D103"]
 "tests/test_mod.py" = ["D103"]

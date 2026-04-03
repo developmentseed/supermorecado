@@ -2,18 +2,24 @@
 
 Issues and pull requests are more than welcome.
 
-**dev install**
+We recommand using [`uv`](https://docs.astral.sh/uv) as project manager for development.
+
+See https://docs.astral.sh/uv/getting-started/installation/ for installation 
+
+### dev install
 
 ```bash
-$ git clone https://github.com/developmentseed/supermorecado.git
-$ cd supermorecado
-$ python -m pip install -e .["dev"]
+git clone https://github.com/developmentseed/supermorecado.git
+cd supermorecado
+
+uv sync
 ```
 
 You can then run the tests with the following command:
 
 ```sh
-python -m pytest --cov supermorecado --cov-report term-missing -s -vv
+uv run pytest --cov supermorecado --cov-report term-missing
+
 ```
 
 ### pre-commit
@@ -21,26 +27,21 @@ python -m pytest --cov supermorecado --cov-report term-missing -s -vv
 This repo is set to use `pre-commit` to run *isort*, *flake8*, *pydocstring*, *black* ("uncompromising Python code formatter") and mypy when committing new code.
 
 ```bash
-$ pre-commit install
+uv run pre-commit install
 ```
 
 ### Docs
 
 ```bash
-$ git clone https://github.com/developmentseed/supermorecado.git
-$ cd supermorecado
-$ python -m pip install -e .["docs"]
-```
+git clone https://github.com/developmentseed/supermorecado.git
+cd supermorecado
 
-Hot-reloading docs:
-
-```bash
-$ mkdocs serve -f docs/mkdocs.yml
+uv run --group docs mkdocs serve -f docs/mkdocs.yml
 ```
 
 To manually deploy docs (note you should never need to do this because Github
 Actions deploys automatically for new commits.):
 
 ```bash
-$ mkdocs gh-deploy -f docs/mkdocs.yml
+uv run --group docs mkdocs gh-deploy -f docs/mkdocs.yml
 ```
