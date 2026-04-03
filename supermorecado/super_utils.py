@@ -25,6 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 """
+
 import json
 import re
 from typing import Any, Dict, Generator, List, Sequence, Tuple
@@ -93,7 +94,7 @@ def get_zoom(tiles: npt.NDArray) -> int:
 
 
 def filter_features(  # noqa: C901
-    features: Sequence[Dict[Any, Any]]
+    features: Sequence[Dict[Any, Any]],
 ) -> Generator[Dict, None, None]:
     """Filter feature."""
     for f in features:
@@ -135,15 +136,13 @@ class Unprojecter:
 
     tms: morecantile.TileMatrixSet = attr.ib()
 
-    def xy_to_lng_lat(
-        self, coordinates: Sequence[Tuple[float, float]]
-    ) -> numpy.ndarray:
+    def xy_to_lng_lat(self, coordinates: Sequence[Tuple[float, float]]) -> numpy.ndarray:
         """Convert coordinates."""
         for c in coordinates:
             tc = numpy.array(c)
-            yield numpy.dstack(
-                [*self.tms._to_geographic.transform(tc[:, 0], tc[:, 1])]
-            )[0].tolist()
+            yield numpy.dstack([*self.tms._to_geographic.transform(tc[:, 0], tc[:, 1])])[
+                0
+            ].tolist()
 
     def unproject(self, feature: Dict[Any, Any]) -> Dict[Any, Any]:
         """Apply reprojection."""

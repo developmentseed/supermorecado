@@ -132,9 +132,7 @@ class burnTiles:
         else:
             raise Exception(f"Invalid geometry type {geom['type']}")
 
-    def tile_extrema(
-        self, bounds: Tuple[float, float, float, float], zoom: int
-    ) -> Dict:
+    def tile_extrema(self, bounds: Tuple[float, float, float, float], zoom: int) -> Dict:
         """Tiles min/max at the given zoom for bounds."""
         ulTile = self.tms.tile(bounds[0], bounds[3], zoom)
         lrTile = self.tms.tile(bounds[2], bounds[1], zoom)

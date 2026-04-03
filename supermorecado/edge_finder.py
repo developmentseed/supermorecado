@@ -47,9 +47,7 @@ def findedges(tiles: npt.NDArray):
     # Using the indices to roll + stack the array, find the minimum along the rolled / stacked axis
     xys_edge = (
         numpy.min(
-            numpy.dstack(
-                [numpy.roll(numpy.roll(burn, i[0], 0), i[1], 1) for i in idxs]
-            ),
+            numpy.dstack([numpy.roll(numpy.roll(burn, i[0], 0), i[1], 1) for i in idxs]),
             axis=2,
         )
         ^ burn

@@ -26,4 +26,3 @@ repos:
         exclude: tests/.*
         additional_dependencies:
         - types-attrs
-        - types-cachetools

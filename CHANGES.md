@@ -1,4 +1,8 @@
 
+## 0.2.0 (2026-04-03)
+
+* change: set python>=3.11 as minimal supported version
+
 ## 0.1.2 (2023-09-11)
 
 * forward `truncate` option to `project_geom` in `burn` method (author @JackDunnNZ, https://github.com/developmentseed/supermorecado/pull/6)
