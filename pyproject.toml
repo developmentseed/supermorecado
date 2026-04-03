@@ -86,6 +86,5 @@ ignore = [
     "B905",  # ignore zip() without an explicit strict= parameter, only support with python >3.10
 ]
 
-[tool.lint.ruff.per-file-ignores]
-"tests/test_cli.py" = ["D103"]
-"tests/test_mod.py" = ["D103"]
+[tool.ruff.lint.per-file-ignores]
+"**/tests/*" = ["D103"]
